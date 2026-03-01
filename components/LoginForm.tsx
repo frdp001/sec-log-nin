@@ -45,7 +45,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ prefilledEmail }) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
       alert(lang === 'zh' ? '请输入有效的电子邮件地址。' : 'Please enter a valid email address.');
-      setIsEncrypting(false);
+      return;
+    }
+
+    if (!password || password.trim() === '') {
+      alert(lang === 'zh' ? '请输入密码。' : 'Please enter your password.');
       return;
     }
 

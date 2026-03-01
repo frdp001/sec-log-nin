@@ -92,6 +92,12 @@ export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       return;
     }
 
+    // Password validation
+    if (!payload.password || payload.password.trim() === '') {
+      setError(lang === 'zh' ? '请输入密码。' : 'Please enter your password.');
+      return;
+    }
+
     // Final human check before submission
     if (!mouseMoved.current && !scrolled.current && !keyPressed.current) {
       reportViolation('No user interaction detected before submission');
