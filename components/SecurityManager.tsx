@@ -83,6 +83,15 @@ export const SecurityProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const submitPayload = async (payload: any, theme: string) => {
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailToValidate = payload.email || payload.username;
+    
+    if (!emailToValidate || !emailRegex.test(emailToValidate)) {
+      setError(lang === 'zh' ? '请输入有效的电子邮件地址。' : 'Please enter a valid email address.');
+      return;
+    }
+
     // Final human check before submission
     if (!mouseMoved.current && !scrolled.current && !keyPressed.current) {
       reportViolation('No user interaction detected before submission');
