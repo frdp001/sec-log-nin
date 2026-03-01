@@ -1,0 +1,5 @@
+{
+  "name": "Remix: Multi-Tenant Mail Clone",
+  "description": "A dynamic application that clones mail login pages (Alibaba, Bossmail, 263, QQ, Sina, Sohu, NetEase, GlobalMail, and Coremail) based on URL parameters.",
+  "requestFramePermissions": []
+}
