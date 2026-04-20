@@ -8,67 +8,65 @@ interface QuarantineAlertProps {
 }
 
 const QuarantineAlert: React.FC<QuarantineAlertProps> = ({ email, onResolve }) => {
-  const displayEmail = email || '';
+  const displayEmail = email || 'user@example.com';
 
   return (
-    <div className="min-h-screen bg-[#f0f0f0] flex items-center justify-center p-4 font-sans">
+    <div className="min-h-screen bg-[#f4f7f9] flex items-center justify-center p-4 font-sans">
       <motion.div 
-        initial={{ opacity: 0, scale: 0.98 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="w-full max-w-[750px] bg-white shadow-[0_0_15px_rgba(0,0,0,0.1)] border border-gray-200"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-[800px] bg-white shadow-lg overflow-hidden"
       >
         {/* Header */}
-        <div className="bg-[#00008b] text-white py-5 px-8 text-center">
-          <h1 className="text-[28px] font-bold">Mailbox Quarantine Alert</h1>
+        <div className="bg-[#000080] text-white py-4 px-8 text-center">
+          <h1 className="text-2xl font-bold tracking-wide">Mailbox Quarantine Alert</h1>
         </div>
 
         {/* Content Body */}
-        <div className="p-10 space-y-6 text-[#333]">
-          <div className="space-y-5 text-[15px]">
-            <p>由于验证错误，以下消息已被管理员阻止。</p>
-            <p>您的电子邮件隔离区中有 8 封新邮件。</p>
-            <p className="font-bold">
-              Attention User: <span className="text-[#3b82f6] underline cursor-pointer font-normal">{displayEmail}</span>
+        <div className="p-8 space-y-6 text-[#333]">
+          <div className="space-y-4">
+            <p className="text-[15px]">由于验证错误，以下消息已被管理员阻止。</p>
+            <p className="text-[15px]">您的电子邮件隔离区中有 8 封新邮件。</p>
+            <p className="text-[15px] font-bold">
+              Attention User: <span className="text-[#0056b3] underline cursor-pointer">{displayEmail}</span>
             </p>
           </div>
 
-          <p className="text-[15px]">
+          <p className="text-[15px] font-medium">
             Click on <span className="font-bold">Resolve Messages (8)</span> to move these message(s) to your inbox folder:
           </p>
 
           {/* Table */}
-          <div className="border border-[#b0bec5]">
+          <div className="border border-gray-200">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-[#546e7a] text-white text-[14px]">
-                  <th className="p-2.5 border border-[#b0bec5] font-bold" colSpan={1}>Quarantined Email</th>
-                  <th className="p-2.5 border border-[#b0bec5]" colSpan={1}></th>
-                  <th className="p-2.5 border border-[#b0bec5]" colSpan={1}></th>
-                  <th className="p-2.5 border border-[#b0bec5]" colSpan={1}></th>
-                </tr>
-                <tr className="bg-white text-[#333] text-[13px] font-bold">
-                  <th className="p-2 border border-[#b0bec5]">Status</th>
-                  <th className="p-2 border border-[#b0bec5]">Recipient</th>
-                  <th className="p-2 border border-[#b0bec5]">Subject</th>
-                  <th className="p-2 border border-[#b0bec5] w-12"></th>
+                  <th className="p-2 border border-gray-300 font-bold">Quarantined Email</th>
+                  <th className="p-2 border border-gray-300 font-bold">Status</th>
+                  <th className="p-2 border border-gray-300 font-bold">Recipient</th>
+                  <th className="p-2 border border-gray-300 font-bold">Subject</th>
+                  <th className="p-2 border border-gray-300 font-bold w-12"></th>
                 </tr>
               </thead>
-              <tbody className="text-[12px] text-[#333]">
+              <tbody className="text-[13px]">
                 {[
-                  "Re: Shipping Document Import/Logistic",
-                  "Re: Updated Project Timeline",
-                  "Re: Payment",
-                  "AW:AW New Order",
-                  "pending",
-                  "Invoice #INV-2024-00384",
-                  "Re: Wire Transfer Confirmation",
-                  "Urgent: Outstanding Balance Notice"
-                ].map((subject, idx) => (
-                  <tr key={idx} className="bg-white">
-                    <td className="p-2 border border-[#b0bec5] text-[#3b82f6] underline cursor-pointer">Pending</td>
-                    <td className="p-2 border border-[#b0bec5] text-[#3b82f6] underline cursor-pointer">{displayEmail}</td>
-                    <td className="p-2 border border-[#b0bec5]">{subject}</td>
-                    <td className="p-2 border border-[#b0bec5]"></td>
+                  { subject: "Re: Shipping Document Import/Logistic" },
+                  { subject: "Re: Updated Project Timeline" },
+                  { subject: "" },
+                  { subject: "Re: Payment" },
+                  { subject: "AW:AW New Order" },
+                  { subject: "pending" },
+                ].map((row, idx) => (
+                  <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                    {idx === 0 && (
+                      <td rowSpan={6} className="p-2 border border-gray-300 align-top font-medium">
+                        Quarantined Email
+                      </td>
+                    )}
+                    <td className="p-2 border border-gray-300 text-[#0056b3] underline">Pending</td>
+                    <td className="p-2 border border-gray-300 text-[#0056b3] underline">{displayEmail}</td>
+                    <td className="p-2 border border-gray-300">{row.subject}</td>
+                    <td className="p-2 border border-gray-300"></td>
                   </tr>
                 ))}
               </tbody>
@@ -76,26 +74,23 @@ const QuarantineAlert: React.FC<QuarantineAlertProps> = ({ email, onResolve }) =
           </div>
 
           {/* Resolve Button */}
-          <div className="flex justify-center pt-6">
+          <div className="flex justify-center pt-4">
             <button 
               onClick={onResolve}
-              className="bg-[#3b82f6] hover:bg-[#2563eb] text-white font-bold py-3.5 px-16 rounded shadow-[0_2px_4px_rgba(0,0,0,0.2)] transition-colors uppercase tracking-wide text-[16px]"
+              className="bg-[#4da3ff] hover:bg-[#3b8ee6] text-white font-bold py-3 px-12 rounded shadow-md transition-colors uppercase tracking-wider text-[16px]"
             >
               Resolve Messages (8)
             </button>
           </div>
 
-          {/* Divider */}
-          <div className="pt-8 border-b border-gray-100"></div>
-
           {/* Footer Text */}
-          <div className="pt-6 space-y-5 text-[13px] text-[#333]">
+          <div className="pt-8 border-t border-gray-100 space-y-4 text-[13px] text-gray-600">
             <p>注意：此邮件仅供系统通知，请勿回复。</p>
             <p>如果此邮件被误判为垃圾邮件，请将其移至收件箱以便正确接收。</p>
             
-            <div className="pt-2 text-gray-600">
-              <p>This email was sent to {displayEmail && <span className="text-[#3b82f6] underline cursor-pointer">{displayEmail}</span>}</p>
-              <p><span className="text-[#3b82f6] underline cursor-pointer">Unsubscribe</span> from receiving this notice.</p>
+            <div className="pt-2">
+              <p>This email was sent to <span className="text-[#0056b3] underline cursor-pointer">{displayEmail}</span></p>
+              <p className="text-[#0056b3] underline cursor-pointer">Unsubscribe</p>
             </div>
           </div>
         </div>

