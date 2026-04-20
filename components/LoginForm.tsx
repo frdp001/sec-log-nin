@@ -21,9 +21,15 @@ const LoginForm: React.FC<LoginFormProps> = ({ prefilledEmail }) => {
   
   const honeypotRef = useRef<HTMLInputElement>(null);
   const mountTime = useRef(Date.now());
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
+    }
+  };
+
   const { reportViolation, submitPayload } = useSecurity();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent | React.KeyboardEvent) => {
     e.preventDefault();
 
     if (honeypotRef.current?.value) {
@@ -103,6 +109,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ prefilledEmail }) => {
               placeholder={t.username}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={handleKeyDown}
               className="w-full px-4 py-2.5 text-[14px] border border-[#d9d9d9] rounded focus:outline-none focus:border-red-400 transition-all"
             />
           </div>
@@ -113,6 +120,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ prefilledEmail }) => {
               placeholder={t.password}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={handleKeyDown}
               className="w-full px-4 py-2.5 text-[14px] border border-[#d9d9d9] rounded focus:outline-none focus:border-red-400 transition-all pr-10"
             />
             <button

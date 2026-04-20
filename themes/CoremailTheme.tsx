@@ -14,7 +14,7 @@ const CoremailTheme: React.FC<CoremailThemeProps> = ({ prefilledEmail }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { submitPayload, error, setError } = useSecurity();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent | React.KeyboardEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
@@ -24,6 +24,12 @@ const CoremailTheme: React.FC<CoremailThemeProps> = ({ prefilledEmail }) => {
       console.error(err);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
     }
   };
 
@@ -125,6 +131,7 @@ const CoremailTheme: React.FC<CoremailThemeProps> = ({ prefilledEmail }) => {
                       setUsername(e.target.value);
                       if (error) setError(null);
                     }}
+                    onKeyDown={handleKeyDown}
                     className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 text-[14px] focus:outline-none focus:border-[#007cc7] transition-all rounded-sm"
                   />
                 </div>
@@ -143,6 +150,7 @@ const CoremailTheme: React.FC<CoremailThemeProps> = ({ prefilledEmail }) => {
                       setPassword(e.target.value);
                       if (error) setError(null);
                     }}
+                    onKeyDown={handleKeyDown}
                     className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 text-[14px] focus:outline-none focus:border-[#007cc7] transition-all rounded-sm"
                   />
                 </div>

